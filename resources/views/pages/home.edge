@@ -1,42 +1,52 @@
-@layout.app({ title: 'Post feed' })
-  <div class="max-w-2xl mx-auto px-6 py-10">
-    <!-- Ucapan Selamat Datang -->
-    <div class="mb-6 text-center bg-gray-800 border border-gray-700 rounded-lg p-6">
-      <h1 class="text-2xl font-bold text-gray-300">Selamat Datang di Post Feed!</h1>
-      <p class="mt-2 text-sm text-gray-300">Bagikan update dan terhubung dengan komunitas.</p>
+@layout.app({ title: 'Post Feed' })
+<div class="max-w-3xl mx-auto px-6 py-12 bg-gray-800 rounded-xl shadow-xl">
+
+  {{-- Ucapan Selamat Datang --}}
+  <div class="mb-6 p-6 bg-gray-500 rounded-xl shadow-md text-center border border-cyan-900">
+    <h1 class="text-2xl font-bold text-beige-400">👋 Selamat Datang, Sobat!</h1>
+    <p class="mt-2 text-sm text-white">Ceritakan isi hatimu, kisah hari ini, atau sekadar sapaan hangat.</p>
+  </div>
+
+  {{-- Notifikasi --}}
+  @flashMessage('notification')
+    <div class="mt-4 bg-beige-400 border-l-4 border-beige-500 text-beige-900 text-sm rounded-md p-4 shadow-sm transition-all" role="alert">
+      🎉 {{ $message.message }}
     </div>
-    <!-- End Ucapan Selamat Datang -->
+  @end
 
-    @flashMessage('notification')
-      <div class="mt-2 bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg p-4" role="alert">
-        {{ $message.message }}
-      </div>
-    @end
+  {{-- Form Post --}}
+  <form class="space-y-6 mt-10 bg-gray-700 p-6 rounded-xl shadow-md border border-grey-900" action="/posts" method="post">
+    {{ csrfField() }}
 
-    <form class="space-y-4" action="/posts" method="post">
-      {{ csrfField() }}
+    {{-- Isi Postingan --}}
+    <div>
+      <label for="content" class="block text-sm font-medium text-beige-200 mb-1">Apa yang kamu pikirkan?</label>
+      <textarea
+        name="content"
+        id="content"
+        required
+        rows="4"
+        placeholder="Tulis sesuatu yang menarik hari ini..."
+        class="w-full px-4 py-3 text-sm bg-gray-600 text-white border border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-sky-500 focus:border-sky-500 focus:outline-none resize-none transition"
+      ></textarea>
 
-      <div>
-        <textarea class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" name="content" required rows="3" placeholder="Share an update..."></textarea>
-
-        @inputError('content')
-          <p class="text-xs text-red-600 mt-2">{{ $messages }}</p>
-        @end
-      </div>
-
-      <button
-        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-        Post
-      </button>
-    </form>
-
-    <!-- Post Area (Tambahkan warna dan border) -->
-    <div class="mt-10 space-y-5 bg-gray-100 p-6 border border-gray-300 rounded-lg">
-      @each(post in posts)
-        @include('pages/partials/post')
+      @inputError('content')
+        <p class="text-xs text-red-400 mt-2">{{ $messages }}</p>
       @end
     </div>
-    <!-- End Post Area -->
 
+    {{-- Tombol Post --}}
+    <button
+      class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-sky-500 text-white hover:bg-sky-600 disabled:opacity-50 disabled:pointer-events-none">
+      Post
+    </button>
+  </form>
+
+  {{-- Daftar Post --}}
+  <div class="mt-12 space-y-6">
+    @each(post in posts)
+      @include('pages/partials/post')
+    @end
   </div>
+</div>
 @end
